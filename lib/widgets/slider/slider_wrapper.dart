@@ -18,12 +18,16 @@ class SliderWrapper extends StatefulWidget {
 class _SliderWrapperState extends State<SliderWrapper> {
   final sliderController = PageController(
     viewportFraction: 0.5,
+    initialPage: 1,
   );
 
-  int currentIndex = 0;
+  int currentIndex = 1;
 
   void onPageChanged(int index) {
-    currentIndex = index;
+    if (index == 0) {
+      sliderController.jumpToPage(widget.images.length - index);
+    }
+    currentIndex = index % widget.images.length;
     setState(() {});
   }
 
@@ -57,9 +61,11 @@ class _SliderWrapperState extends State<SliderWrapper> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            for (var i = 0; i < widget.images.length; i++)
+            for (var i = 1; i < widget.images.length + 1; i++)
               SliderDot(
-                isSelected: currentIndex % widget.images.length == i,
+                isSelected: currentIndex == 0 && i == widget.images.length
+                    ? true
+                    : currentIndex == i,
               ),
           ],
         ),
